@@ -1,15 +1,12 @@
-import { generateToke } from "../lib/utils.js";
+import { generateToken } from "../lib/utils.js";
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 
 export const signup = async (req, res) => {
   const { fullName, email, password } = req.body;
   try {
-
-    if(!fullName || !email || !password) {
-        return res
-          .status(400)
-          .json({ message: "All fields are required" });
+    if (!fullName || !email || !password) {
+      return res.status(400).json({ message: "All fields are required" });
     }
 
     if (password.length < 6) {
@@ -29,13 +26,11 @@ export const signup = async (req, res) => {
       email,
       password: hashedPassword,
     });
-    
-    
 
+    await newUser.save();
     if (newUser) {
       // jwt token
-      generateToke(newUser._id, res);
-      await newUser.save();
+      generateToken(newUser._id, res);
       res.status(201).json({
         _id: newUser._id,
         fullName: newUser.fullName,
@@ -47,7 +42,7 @@ export const signup = async (req, res) => {
     }
   } catch (error) {
     console.log("Error in signup controller", error.message);
-    res.status(500).json({message: "internal server error"})
+    res.status(500).json({ message: "internal server error" });
   }
 };
 
