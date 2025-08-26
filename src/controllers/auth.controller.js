@@ -1,3 +1,4 @@
+import cloudinary from "../lib/cloudinary.js";
 import { generateToken } from "../lib/utils.js";
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
@@ -59,7 +60,7 @@ export const login = async (req, res) => {
     if (!isPasswordCorrect) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
-    const token = generateToken(user._id, res)
+    const token = generateToken(user._id, res);
 
     res.status(200).json({
       _id: user._id,
@@ -83,6 +84,16 @@ export const logout = (req, res) => {
   }
 };
 
-export const updateProfile =async (req,res)=>{
-  
-}
+export const updateProfile = async (req, res) => {
+  try {
+    const { avatar } = req.body;
+    const userID = req.user._id;
+
+    if (!avatar) {
+      return res.status(400).json({ message: "Profile Pic is required" });
+    }
+    await cloudinary
+
+
+  } catch (error) {}
+};
