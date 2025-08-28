@@ -1,3 +1,5 @@
+import User from "../models/user.model.js";
+
 export const getUsersFroSidebar = async (req, res) => {
   try {
     const loggedInUserId = req.user._id;
