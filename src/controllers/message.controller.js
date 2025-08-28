@@ -1,3 +1,4 @@
+import Message from "../models/message.modal.js";
 import User from "../models/user.model.js";
 
 export const getUsersFroSidebar = async (req, res) => {
@@ -7,10 +8,34 @@ export const getUsersFroSidebar = async (req, res) => {
       _id: { $ne: loggedInUserId },
     }).select("-password");
 
-    res.status(200).json(filteredUsers)
-
+    res.status(200).json(filteredUsers);
   } catch (error) {
-    console.error("Error in getUSerForSidebar",error.message)
-    res.status(500).json({message: "Internal Server Error"})
+    console.error("Error in getUSerForSidebar", error.message);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const getMessages = async (req, res) => {
+  try {
+    const { id: userToChatId } = req.params;
+    const myId = req.user._id;
+
+    const message = await Message.find({
+      $or: [
+        { senderId: myId, receiverId: userToChatId },
+        { senderId: userToChatId, receiverId: myId },
+      ],
+    });
+    res.status(200).json(message);
+  } catch (error) {
+    console.error("Error in getMessages", error.message);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const sendMessages = async (req, res) => {
+  try {} catch(error){
+    console.error("Error in getUSerForSidebar", error.message);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
